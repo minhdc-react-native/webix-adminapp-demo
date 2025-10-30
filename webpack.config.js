@@ -1,23 +1,25 @@
+/* eslint-disable no-undef */
+// eslint-disable-next-line
 var path = require("path");
 var webpack = require("webpack");
 
-module.exports = function(env) {
+module.exports = function (env) {
 
 	var pack = require("./package.json");
 	var ExtractTextPlugin = require("extract-text-webpack-plugin");
 	var production = !!(env && env.production === "true");
 	var babelSettings = {
-		extends: path.join(__dirname, '/.babelrc')
+		extends: path.join(__dirname, "/.babelrc")
 	};
 
 	var config = {
 		entry: "./sources/app.js",
 		output: {
 			path: path.join(__dirname, "codebase"),
-			publicPath:"/codebase/",
+			publicPath: "/codebase/",
 			library: "AppDemo",
 			libraryExport: "default",
-    		libraryTarget: "var",
+			libraryTarget: "var",
 			filename: "app.js"
 		},
 		devtool: "inline-source-map",
@@ -40,9 +42,10 @@ module.exports = function(env) {
 		resolve: {
 			extensions: [".js"],
 			modules: ["./sources", "node_modules"],
-			alias:{
-				"jet-views":path.resolve(__dirname, "sources/views"),
-				"jet-locales":path.resolve(__dirname, "sources/locales")
+			alias: {
+				"@": path.resolve(__dirname, "sources"),
+				"jet-views": path.resolve(__dirname, "sources/views"),
+				"jet-locales": path.resolve(__dirname, "sources/locales")
 			}
 		},
 		plugins: [
@@ -50,18 +53,18 @@ module.exports = function(env) {
 			new webpack.DefinePlugin({
 				VERSION: `"${pack.version}"`,
 				APPNAME: `"${pack.name}"`,
-				PRODUCTION : production
+				PRODUCTION: production
 			})
 		]
 	};
 
 	if (production) {
 		config.plugins.push(
-			new  webpack.optimize.UglifyJsPlugin({
+			new webpack.optimize.UglifyJsPlugin({
 				test: /\.js$/
 			})
 		);
 	}
 
 	return config;
-}
+};

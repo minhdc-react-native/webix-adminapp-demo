@@ -1,0 +1,38 @@
+.webix_all_tabs .webix_item_tab.webix_selected {
+    box-shadow: inset 0 -2px var(--color-text-muted);
+}
+
+.webix_all_tabs .webix_item_tab.webix_selected:focus {
+    color: var(--color-text);
+    box-shadow: inset 0 -2px var(--color-text);
+}
+
+.webixtype_bottom .webix_item_tab.webix_selected {
+    box-shadow: inset 0 2px var(--color-text-muted);
+}
+
+.webixtype_bottom .webix_item_tab.webix_selected:focus {
+    box-shadow: inset 0 2px var(--color-text);
+}
+
+.webix_all_tabs .webix_item_tab,
+.webix_all_tabs .webix_tab_more_icon .webix_icon,
+.webixtype_bottom .webix_item_tab.webix_selected,
+.webix_el_tabbar .webixtype_icon .webix_img_btn .webix_icon_btn,
+.webix_el_tabbar .webixtype_iconTop .webix_icon,
+.webix_el_tabbar .webixtype_image .webix_icon,
+.webix_el_tabbar .webixtype_iconTop .webix_item_tab.webix_selected .webix_img_btn_text,
+.webix_el_tabbar .webixtype_image .webix_item_tab.webix_selected .webix_img_btn_text,
+.webix_el_tabbar .webixtype_iconTop .webix_item_tab.webix_selected .webix_icon,
+.webix_el_tabbar .webixtype_image .webix_item_tab.webix_selected .webix_icon,
+.webix_el_tabbar .webixtype_iconTop .webix_item_tab.webix_selected .webix_img_btn,
+.webix_el_tabbar .webixtype_image .webix_item_tab.webix_selected .webix_img_btn,
+.webix_el_tabbar .webixtype_icon .webix_item_tab .webix_img_btn,
+.webix_el_tabbar .webixtype_iconTop .webix_item_tab .webix_img_btn,
+.webix_el_tabbar .webixtype_image .webix_item_tab .webix_img_btn,
+.webix_el_tabbar .webixtype_icon .webix_tab_more_icon .webix_icon,
+.webix_el_tabbar .webixtype_iconTop .webix_tab_more_icon .webix_icon,
+.webix_el_tabbar .webixtype_image .webix_tab_more_icon .webix_icon,
+.webix_el_tabbar .webixtype_bottom .webix_tab_more_icon .webix_icon {
+    color: var(--color-text-muted);
+}

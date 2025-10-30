@@ -1,0 +1,25 @@
+.webix_segment_0,
+.webix_segment_1,
+.webix_segment_N {
+    color: var(--color-secondary-active);
+}
+
+.webix_segment_0.webix_selected,
+.webix_segment_1.webix_selected,
+.webix_segment_N.webix_selected,
+.webix_segment_0.webix_selected:active,
+.webix_segment_1.webix_selected:active,
+.webix_segment_N.webix_selected:active,
+.webix_segment_0.webix_selected:focus,
+.webix_segment_1.webix_selected:focus,
+.webix_segment_N.webix_selected:focus {
+    border-color: var(--color-secondary-active);
+    background-color: var(--color-secondary-active);
+}
+
+.webix_segment_0.webix_selected:hover,
+.webix_segment_1.webix_selected:hover,
+.webix_segment_N.webix_selected:hover {
+    border-color: var(--color-secondary-hover);
+    background-color: var(--color-secondary-hover);
+}

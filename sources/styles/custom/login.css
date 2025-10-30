@@ -1,0 +1,56 @@
+.login-page {
+    background: url("/data/images/background.png");
+    background-size: cover;
+    color: #333;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.login-toolbar {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-logo {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--color-secondary-active);
+}
+
+.login-title {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: var(--color-secondary-active);
+}
+
+.login-footer {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(3px);
+    height: "100%";
+}
+
+.webix_el_form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.template_center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.template_center_item {
+    justify-content: center;
+    align-items: center;
+}

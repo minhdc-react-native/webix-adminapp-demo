@@ -3,28 +3,27 @@
         "browser": true,
         "es6": true
     },
-    "globals":{
-        "webix":true,
-        "remote":true,
-        "APPNAME":true, "VERSION":true, "PRODUCTION":true
+    "globals": {
+        "webix": true,
+        "remote": true,
+        "apiClient": true,
+        "APPNAME": true,
+        "VERSION": true,
+        "PRODUCTION": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
+        "ecmaVersion": 2018,
         "sourceType": "module"
     },
     "rules": {
-        "indent": [
-            "error",
-            "tab",
-            {"SwitchCase":1}
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "quotes": "off",
+        "indent": "off",
+        "no-unused-vars": "off",
+        "no-console": "off"
     }
 }

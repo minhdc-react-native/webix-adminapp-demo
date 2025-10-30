@@ -1,0 +1,36 @@
+.webix_cal_body .webix_cal_select .webix_cal_day_inner,
+.webix_cal_body .webix_cal_today.webix_cal_select .webix_cal_day_inner,
+.webix_cal_body .webix_cal_select .webix_cal_day_inner:hover,
+.webix_cal_body .webix_cal_today.webix_cal_select .webix_cal_day_inner:hover,
+.webix_cal_body .webix_cal_select:focus .webix_cal_day_inner,
+.webix_cal_body .webix_cal_today.webix_cal_select:focus .webix_cal_day_inner {
+    background-color: var(--color-text-muted);
+}
+
+.webix_cal_body .webix_cal_event,
+.webix_cal_done {
+    color: var(--color-primary);
+}
+
+.webix_cal_icon:hover,
+.webix_cal_time:hover,
+.webix_cal_month_name:hover,
+.webix_cal_icon:focus,
+.webix_cal_time:focus,
+.webix_cal_month_name:focus,
+.webix_cal_prev_button:hover,
+.webix_cal_next_button:hover,
+.webix_cal_prev_button:focus,
+.webix_cal_next_button:focus {
+    color: var(--color-primary);
+}
+
+.webix_cal_body .webix_cal_block.webix_selected span,
+.webix_cal_body .webix_cal_block.webix_selected span:hover,
+.webix_cal_body .webix_cal_block.webix_selected:focus span {
+    background-color: var(--color-text-muted);
+}
+
+.webix_cal_body .webix_cal_today .webix_cal_day_inner {
+    box-shadow: inset 0 0 0 1px var(--color-text);
+}

@@ -1,0 +1,43 @@
+.webix_el_button button {
+    border-radius: var(--radius-sm);
+}
+
+.webix_el_button button:active {
+    transform: scale(0.97);
+}
+
+.webix_secondary .webix_button {
+    color: var(--color-text);
+}
+
+.webix_primary .webix_button {
+    background: var(--color-secondary);
+}
+
+.webix_primary .webix_button:hover {
+    background-color: var(--color-secondary-hover);
+}
+
+.webix_primary .webix_button:focus {
+    background-color: var(--color-secondary-active);
+}
+
+.webix_primary .webix_button:active {
+    background-color: var(--color-secondary-active);
+}
+
+.webix_primary .webix_button .webix_icon,
+.webix_primary .webix_button .webix_img_btn_text,
+.webix_primary .webix_button .webix_icon_btn {
+    color: #FFFFFF;
+}
+
+.webix_primary .webix_pressed .webix_button {
+    background-color: var(--color-secondary-active);
+}
+
+.webix_secondary .webix_button .webix_icon,
+.webix_secondary .webix_button .webix_img_btn_text,
+.webix_secondary .webix_button .webix_icon_btn {
+    color: var(--color-secondary);
+}
