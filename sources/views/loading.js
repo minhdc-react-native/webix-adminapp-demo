@@ -6,6 +6,8 @@ export default class LoadingView extends JetView {
             view: "window",
             id: "globalLoading",
             position: "center",
+            width: 120,
+            height: 100,
             modal: true,
             move: false,
             resize: false,

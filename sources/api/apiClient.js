@@ -1,20 +1,41 @@
-import { KEY_STORAGE } from "./constant";
+import LoadingView from "../views/loading";
+import { VcStorage } from "./storage";
 // api/apiClient.js
 (function (global) {
+
+    function handleAjaxError(err, method, url) {
+        let message = `❌ Request ${method} ${url} failed`;
+
+        if (err.status) {
+            message += ` (status ${err.status})`;
+            try {
+                const body = err.responseText ? JSON.parse(err.responseText) : null;
+                if (body && body.message) message += `: ${body.message}`;
+            } catch (e) {
+                console.error('error>>', e);
+            }
+        } else {
+            message += " (network error)";
+        }
+
+        console.error(message, err);
+        webix.message({ type: "error", text: message });
+    }
+
     function getBaseUrl() {
         const hostname = window.location.hostname;
         if (hostname.includes('localhost')) {
-            return "https://hoclaptrinh.vaonline.vn";
+            return "https://hoclaptrinh.vaonline.vn/api";
         }
-        return `https://${hostname}`;
+        return `https://${hostname}/api`;
     }
     // Lấy token từ localStorage hoặc sessionStorage
     function getToken() {
         return {
-            token: localStorage.getItem(KEY_STORAGE.TOKEN) || sessionStorage.getItem(KEY_STORAGE.TOKEN),
-            yearSelected: localStorage.getItem(KEY_STORAGE.YEAR_SELECTED) || '',
-            orgUnit: localStorage.getItem(KEY_STORAGE.ORG_UNIT) || '',
-            lang: localStorage.getItem(KEY_STORAGE.LANG_SELECTED) || 'vi'
+            token: VcStorage.getToken(),
+            yearSelected: VcStorage.getYear(),
+            orgUnit: VcStorage.getOrgUnit(),
+            lang: VcStorage.getLang()
         };
     }
 
@@ -23,10 +44,6 @@ import { KEY_STORAGE } from "./constant";
         const token = getToken();
         if (token) {
             headers["Authorization"] = `Bearer ${token.token};${token.orgUnit};${token.yearSelected};${token.lang}`;
-        }
-        // Nếu có base URL thì ghép vào
-        if (url && !url.startsWith("http")) {
-            request.url = getBaseUrl() + url;
         }
     });
 
@@ -48,32 +65,51 @@ import { KEY_STORAGE } from "./constant";
     });
 
     const apiClient = {
-        async get(url, params = {}) {
-            const query = Object.keys(params)
-                .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
-                .join("&");
-            const fullUrl = query ? `${url}?${query}` : url;
-            const res = await webix.ajax().get(fullUrl);
-            return res.json();
+        async request(method, url, { data, params, onSuccess, onError, showLoading = false } = {}) {
+
+            let loaderId = null;
+            try {
+                if (showLoading) {
+                    loaderId = webix.ui(LoadingView);
+                    loaderId.show();
+                }
+                let fullUrl = getBaseUrl() + url;
+                if (params && Object.keys(params).length) {
+                    const query = Object.keys(params)
+                        .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
+                        .join("&");
+                    fullUrl += `?${query}`;
+                }
+                const res = await webix.ajax()[method.toLowerCase()](fullUrl, data ? JSON.stringify(data) : null);
+                const json = res.json();
+                if (onSuccess) onSuccess(json);
+                return [json, null];
+            } catch (err) {
+                handleAjaxError(err, method, url);
+                if (onError) onError(err);
+                return [null, err];
+                // throw err;
+            } finally {
+                // if (loaderId) loaderId.hideLoading();
+            }
         },
 
-        async post(url, data = {}) {
-            const res = await webix.ajax().headers({
-                "Content-Type": "application/json"
-            }).post(url, JSON.stringify(data));
-            return res.json();
+        async get(url, options = {}) {
+            return await this.request("GET", url, options);
         },
 
-        async put(url, data = {}) {
-            const res = await webix.ajax().headers({
-                "Content-Type": "application/json"
-            }).put(url, JSON.stringify(data));
-            return res.json();
+        async post(url, data = {}, options = {}) {
+            const opts = Object.assign({}, options, { data });
+            return await this.request("POST", url, opts);
         },
 
-        async delete(url) {
-            const res = await webix.ajax().del(url);
-            return res.json();
+        async put(url, data = {}, options = {}) {
+            const opts = Object.assign({}, options, { data });
+            return await this.request("PUT", url, opts);
+        },
+
+        async delete(url, options = {}) {
+            return await this.request("DELETE", url, options);
         }
     };
     global.apiClient = apiClient;

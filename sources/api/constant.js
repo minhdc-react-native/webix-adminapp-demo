@@ -5,5 +5,6 @@ export const KEY_STORAGE = {
     ORG_UNIT: 'org-unit',
     SUB_DOMAIN: 'sub-domain',
     INFO_LOGIN: 'info-login',
-    LANG_SELECTED: 'lang-selected'
+    LANG_SELECTED: 'lang-selected',
+    LANG_DATA: 'lang-data',
 };

@@ -11,6 +11,14 @@
 	background: url(webix-logo.svg) 2px -7px no-repeat;
 }
 
+.lang_vi {
+	background: url(vietnam.svg) 2px -7px no-repeat;
+}
+
+.lang_en {
+	background: url(united-kingdom.svg) 2px -7px no-repeat;
+}
+
 .webix_header.webix_dark .webix_template {
 	text-align: center;
 	line-height: 56px;

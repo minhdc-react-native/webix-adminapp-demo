@@ -18,7 +18,6 @@
 	<script type="text/javascript" src="codebase/app.js?{VERSION}"></script>
 	<link rel="stylesheet" type="text/css" href="codebase/app.css?{VERSION}">
 	<script>
-
 		webix.ready(function () {
 			if (webix.env.touch)
 				webix.ui.fullScreen();
@@ -26,7 +25,6 @@
 				webix.CustomScroll.init();
 
 			const app = new AppDemo({});
-
 			app.render();
 			// Theo dõi DOM và xóa thông báo không mong muốn
 			const observer = new MutationObserver(() => {
