@@ -1,6 +1,7 @@
 webix.protoUI({
     name: "gridsearch",
     defaults: {
+        icon: 'wxi-plus',
         css: "webix_el_search",
         delay: 300,
         minLength: 2,
@@ -54,7 +55,29 @@ webix.protoUI({
                         suggest.hide();
                     }
                 }, config.delay || self.defaults.delay);
+            },
+            onSearchIconClick: function (e) {
+                console.log('search value>>', this.getValue());
             }
         };
+        this.attachEvent("onAfterRender", this._addIcon.bind(this));
+    },
+    _addIcon: function () {
+        const input = this.getInputNode() || this.$view.querySelector("input");
+        if (!input || !this.config.iconShow) return;
+
+        if (this.$view.querySelector(".webix_input_icon custom")) return;
+        input.style.paddingLeft = "30px";
+        const wrapper = input.parentNode;
+        wrapper.style.position = "relative";
+        const btn = document.createElement("span");
+        btn.className = "webix_input_icon custom " + this.config.iconShow;
+        btn.style.position = "absolute";
+        btn.style.left = "4px";
+        btn.style.top = "50%";
+        btn.style.transform = "translateY(-50%)";
+        if (this.config.iconColor) btn.style.color = this.config.iconColor;
+        wrapper.appendChild(btn);
+        this._icon = btn;
     }
 }, webix.ui.search);

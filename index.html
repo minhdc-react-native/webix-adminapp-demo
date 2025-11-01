@@ -23,7 +23,7 @@
 				webix.ui.fullScreen();
 			else if (webix.CustomScroll)
 				webix.CustomScroll.init();
-
+			webix.skin.set("mini");
 			const app = new AppDemo({});
 			app.render();
 			// Theo dõi DOM và xóa thông báo không mong muốn

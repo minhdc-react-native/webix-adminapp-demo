@@ -2,6 +2,7 @@
 .webix_segment_1,
 .webix_segment_N {
     color: var(--color-secondary-active);
+    border-radius: 12px;
 }
 
 .webix_segment_0.webix_selected,
