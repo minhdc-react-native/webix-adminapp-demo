@@ -38,7 +38,7 @@ webix.protoUI({
             const btnShow = document.createElement("span");
             btnShow.className = "webix_input_icon_show webix_input_icon " + this.config.iconShow;
             btnShow.style.position = "absolute";
-            btnShow.style.left = "4px";
+            btnShow.style.left = `${input.offsetLeft + 4}px`;
             btnShow.style.top = "50%";
             btnShow.style.transform = "translateY(-50%)";
             if (this.config.iconColor) btnShow.style.color = this.config.iconColor;

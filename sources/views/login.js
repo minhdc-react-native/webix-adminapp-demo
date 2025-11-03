@@ -8,6 +8,7 @@ export default class LoginView extends JetView {
     constructor(config) {
         super(config);
         this.locale = this.app.getService("locale");
+        this.isFirstLang = false;
     }
 
     config() {
@@ -76,7 +77,7 @@ export default class LoginView extends JetView {
                                                         { view: "password", height: 60, name: "pass", iconShow: 'mdi mdi-shield-key', iconColor: 'red', label: this._("login.pass"), labelPosition: 'top', required: true },
                                                         {
                                                             localId: "idOrgUnit", height: 60, iconShow: 'mdi mdi-database', iconColor: 'purple',
-                                                            view: "gridcombo", displayField: 'value', name: 'dvcs', label: this._("login.org.unit"), labelPosition: 'top',
+                                                            view: "gridcombo", displayField: 'id', name: 'dvcs', label: this._("login.org.unit"), labelPosition: 'top',
                                                             columns: [
                                                                 { id: 'id', header: this._('DVCS_ID'), width: 100 },
                                                                 { id: 'value', header: this._('TEN_V'), width: 500 }
@@ -160,7 +161,7 @@ export default class LoginView extends JetView {
                                                         //         }
                                                         //     ]
                                                         // }
-                                                        { view: "numeric", height: 60, labelPosition: 'top', name: 'inputNum', label: 'Input number', value: 123423.09 },
+                                                        // { view: "numeric", height: 60, labelPosition: 'top', name: 'inputNum', label: 'Input number', value: 123423.09 },
                                                     ],
                                                 },
                                             ],
@@ -195,10 +196,14 @@ export default class LoginView extends JetView {
             pass: '',
             dvcs: '',
             remember: false
-
         };
         form.setValues(defaultValue);
         if (defaultValue.username !== '') this.onBlurUserName();
+        if (!this.isFirstLang) {
+            this.isFirstLang = true;
+            this.getDataLang();
+        }
+
     }
 
     async onBlurUserName() {
@@ -216,7 +221,11 @@ export default class LoginView extends JetView {
             console.log('data login>>', data);
             // await apiClient.post("/api/auth/login", data);
             await new Promise((resolve) => setTimeout(resolve, 5000));
-            VcStorage.setInfoLogin(JSON.stringify(data));
+            if (data.remember) {
+                VcStorage.setInfoLogin(JSON.stringify(data));
+            } else {
+                VcStorage.cleanInfoLogin();
+            }
             // this.app.show("/app-list");
         } catch (e) {
             webix.message({ type: "error", text: "Đăng nhập thất bại" });
@@ -239,6 +248,28 @@ export default class LoginView extends JetView {
         this.locale.setLang(lang);
         this.locale.setLangData(lang, allDataLang);
         this.loading.hideLoading();
+    }
+
+    async getDataLang() {
+        const lang = VcStorage.getLang();
+        const langData = VcStorage.getLangData();
+        let fixData = {};
+        if (!langData) {
+            const [data, error] = await apiClient.get("/System/GetLanguagesByMa", { params: { lang: lang }, showLoading: false });
+            data.forEach((item) => {
+                fixData[item.KEY_LANG] = item.VALUES_LANG;
+            });
+            VcStorage.setLangData(JSON.stringify(fixData));
+        } else {
+            fixData = JSON.parse(langData);
+        }
+
+        if (typeof fixData === "string") fixData = JSON.parse(fixData);
+
+        const allDataLang = Object.assign({}, fixData, lang === "vi" ? LangVi : LangEn);
+
+        this.locale.setLang(lang);
+        this.locale.setLangData(lang, allDataLang);
     }
 
     forgotPassword() {

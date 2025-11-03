@@ -19,6 +19,12 @@ webix.protoUI({
         self.attachEvent("onAfterRender", function () {
             webix.delay(() => self._initAutoNumeric(config.value));
         });
+
+        this.attachEvent("onTimedKeyPress", function () {
+            const value = this.getValue();
+            const numericValue = parseFloat(value) || 0;
+            this.$view.querySelector("input").style.color = numericValue < 0 ? "red" : "black";
+        });
     },
 
     _initAutoNumeric: function (initialValue) {
@@ -167,10 +173,15 @@ webix.protoUI({
             }
         }
 
-        function confirmCalc() {
+        function confirmCalc(isEqual = false) {
             const result = evalSafe(webix.$$(self._calcWinId).getValue());
-            self.setValue(result);
-            self._calcWin.hide();
+            if (!isEqual) {
+                self.setValue(result);
+                self._calcWin.hide();
+            } else {
+                webix.$$(self._calcWinId).setValue(result);
+            }
+
         }
         function attachKeyboard() {
             detachKeyboard();
@@ -186,8 +197,16 @@ webix.protoUI({
                     setInput(""); e.preventDefault();
                 } else if (key === "Enter") {
                     confirmCalc(); e.preventDefault();
+                } else if (key === "=") {
+                    confirmCalc(true); e.preventDefault();
                 } else if (key === "Escape") {
-                    self._calcWin.hide(); e.preventDefault();
+                    const result = webix.$$(self._calcWinId).getValue();
+                    if (result) {
+                        webix.$$(self._calcWinId).setValue('');
+                    } else {
+                        self._calcWin.hide();
+                    }
+                    e.preventDefault();
                 }
             });
         }

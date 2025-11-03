@@ -19,7 +19,7 @@ import { VcStorage } from "./storage";
         }
 
         console.error(message, err);
-        webix.message({ type: "error", text: message });
+        // webix.message({ type: "error", text: message });
     }
 
     function getBaseUrl() {
@@ -49,7 +49,7 @@ import { VcStorage } from "./storage";
 
     webix.attachEvent("onLoadError", function (xhr, status, err, url) {
         console.error("❌ API load error:", url, status, err);
-        webix.message({ type: "error", text: "Lỗi tải dữ liệu từ server" });
+        // webix.message({ type: "error", text: "Lỗi tải dữ liệu từ server" });
     });
 
     webix.attachEvent("onAjaxError", function (xhr) {
