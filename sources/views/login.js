@@ -1,18 +1,20 @@
 import { JetView } from "webix-jet";
+import { getService } from "../services/serviceHelper";
+import { VcStorage } from "../services/storage";
 import LoadingView from "./loading";
-import { VcStorage } from "../api/storage";
-import LangVi from "../locales/vi";
-import LangEn from "../locales/en";
+import { KEY_DATA_CONNECTION } from "../constant/constant";
+import VcMessage from "../services/message";
 export default class LoginView extends JetView {
 
     constructor(config) {
         super(config);
-        this.locale = this.app.getService("locale");
-        this.isFirstLang = false;
+        this.lang = getService("lang");
+        this.session = getService("session");
+        this.dataCollection = getService('dataCollection');
     }
 
     config() {
-        const currentLang = VcStorage.getLang();
+        const currentLang = this.lang.getCurrent();
         return {
             css: "login-page",
             rows: [
@@ -37,7 +39,7 @@ export default class LoginView extends JetView {
                                     width: 250,
                                     height: 35,
                                     on: {
-                                        onChange: (lang) => this.changeLang(lang),
+                                        onChange: (lang) => this.lang.changeLang(lang, this.setLoading.bind(this)),
                                     },
                                 },
                                 {}
@@ -81,17 +83,9 @@ export default class LoginView extends JetView {
                                                             columns: [
                                                                 { id: 'id', header: this._('DVCS_ID'), width: 100 },
                                                                 { id: 'value', header: this._('TEN_V'), width: 500 }
-                                                            ]
+                                                            ],
+                                                            dataCollection: this.dataCollection.getCollection(KEY_DATA_CONNECTION.DVCS_ID)
                                                         },
-                                                        // {
-                                                        //     localId: "idOrgUnitSearch", iconShow: 'mdi mdi-database', iconColor: 'purple',
-                                                        //     view: "gridsearch", height: 60, name: 'dvcs1', label: this._("login.org.unit"), labelPosition: 'top',
-                                                        //     columns: [
-                                                        //         { id: 'id', header: this._('DVCS_ID'), width: 100 },
-                                                        //         { id: 'value', header: this._('TEN_V'), width: 500 }
-                                                        //     ],
-                                                        //     url: { link: '/System/GetDvcsByUser', filterKey: 'username' }
-                                                        // },
                                                         {
                                                             cols: [
                                                                 {
@@ -126,6 +120,7 @@ export default class LoginView extends JetView {
                                                                     css: "webix_primary",
                                                                     icon: 'mdi mdi-login',
                                                                     iconPosition: "right",
+                                                                    // loadingText: "Truy cập...",
                                                                     hotkey: "F10",
                                                                     click: function () {
                                                                         this.$scope.doLogin(this);
@@ -133,35 +128,6 @@ export default class LoginView extends JetView {
                                                                 },
                                                             ]
                                                         },
-                                                        // {
-                                                        //     view: "gridcombo",
-                                                        //     name: 'dvcs2',
-                                                        //     labelPosition: 'top',
-                                                        //     height: 60,
-                                                        //     label: "Danh mục",
-                                                        //     iconShow: "mdi mdi-folder-outline",
-                                                        //     displayField: "value",
-                                                        //     columns: [
-                                                        //         {
-                                                        //             id: "value", header: "Film title", width: 250,
-                                                        //             template: "{common.space()}{common.icon()} #value#"
-                                                        //         },
-                                                        //         { id: "chapter", header: "Mode", width: 200 }
-                                                        //     ],
-                                                        //     data: [
-                                                        //         {
-                                                        //             "id": "1", "value": "The Shawshank Redemption", "open": true, "data": [
-                                                        //                 { "id": "1.1", "value": "Part 1.1", "chapter": "alpha" },
-                                                        //                 {
-                                                        //                     "id": "1.2", "value": "Part 1.2", "chapter": "beta", "open": true, "data": [
-                                                        //                         { "id": "1.2.1", "value": "Part 1.2.1", "chapter": "beta-twin" }
-                                                        //                     ]
-                                                        //                 }
-                                                        //             ]
-                                                        //         }
-                                                        //     ]
-                                                        // }
-                                                        // { view: "numeric", height: 60, labelPosition: 'top', name: 'inputNum', label: 'Input number', value: 123423.09 },
                                                     ],
                                                 },
                                             ],
@@ -184,99 +150,44 @@ export default class LoginView extends JetView {
     }
 
     _(key) {
-        return this.locale._(key);
+        return this.lang.locale._(key);
     }
 
     init(view) {
         this.loading = this.ui(LoadingView);
-        const form = this.$$("loginForm");
-        const storageValue = VcStorage.getInfoLogin();
-        const defaultValue = storageValue ? JSON.parse(storageValue) : {
-            username: '',
-            pass: '',
-            dvcs: '',
-            remember: false
-        };
-        form.setValues(defaultValue);
-        if (defaultValue.username !== '') this.onBlurUserName();
-        if (!this.isFirstLang) {
-            this.isFirstLang = true;
-            this.getDataLang();
-        }
-
+        const defaultValue = this.session.getUser();
+        if (defaultValue.username !== '') this.onBlurUserName(defaultValue);
     }
 
-    async onBlurUserName() {
-        const { username } = this.$$("loginForm").getValues();
-        const [data, error] = await apiClient.get("/System/GetDvcsByUser", { params: { username: username }, showLoading: false });
-        const orgUnit = this.$$("idOrgUnit");
-        if (orgUnit) orgUnit.parse(data);
+    setLoading(loading) {
+        loading ? this.loading.showLoading("...") : this.loading.hideLoading();
+    }
+
+    async onBlurUserName(defaultValue) {
+        const form = this.$$("loginForm");
+        const { username } = defaultValue || form.getValues();
+        await this.dataCollection.load(KEY_DATA_CONNECTION.DVCS_ID, '/System/GetDvcsByUser', { params: { username: username }, reload: true });
+        if (defaultValue) form.setValues(defaultValue);
     }
 
     async doLogin(btn) {
-        this.loading.showLoading("...");
         btn.showLoading(true);
-        try {
-            const data = this.$$("loginForm").getValues();
-            console.log('data login>>', data);
-            // await apiClient.post("/api/auth/login", data);
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-            if (data.remember) {
-                VcStorage.setInfoLogin(JSON.stringify(data));
-            } else {
-                VcStorage.cleanInfoLogin();
-            }
-            // this.app.show("/app-list");
-        } catch (e) {
-            webix.message({ type: "error", text: "Đăng nhập thất bại" });
-        } finally {
-            btn.showLoading(false);
-            this.loading.hideLoading();
+        const form = this.$$("loginForm");
+        form.disable();
+        const infoLogin = form.getValues();
+        const [data, error] = await this.session.login(infoLogin);
+        form.enable();
+        btn.showLoading(false);
+        if (!error) {
+            this.show("/main");
         }
-    }
-
-    async changeLang(lang) {
-        this.loading.showLoading("...");
-        let fixData = {};
-        const [data, error] = await apiClient.get("/System/GetLanguagesByMa", { params: { lang: lang }, showLoading: false });
-        data.forEach((item) => {
-            fixData[item.KEY_LANG] = item.VALUES_LANG;
-        });
-        const allDataLang = Object.assign({}, fixData, lang === "vi" ? LangVi : LangEn);
-        VcStorage.setLang(lang);
-        VcStorage.getLangData(JSON.stringify(allDataLang));
-        this.locale.setLang(lang);
-        this.locale.setLangData(lang, allDataLang);
-        this.loading.hideLoading();
-    }
-
-    async getDataLang() {
-        const lang = VcStorage.getLang();
-        const langData = VcStorage.getLangData();
-        let fixData = {};
-        if (!langData) {
-            const [data, error] = await apiClient.get("/System/GetLanguagesByMa", { params: { lang: lang }, showLoading: false });
-            data.forEach((item) => {
-                fixData[item.KEY_LANG] = item.VALUES_LANG;
-            });
-            VcStorage.setLangData(JSON.stringify(fixData));
-        } else {
-            fixData = JSON.parse(langData);
-        }
-
-        if (typeof fixData === "string") fixData = JSON.parse(fixData);
-
-        const allDataLang = Object.assign({}, fixData, lang === "vi" ? LangVi : LangEn);
-
-        this.locale.setLang(lang);
-        this.locale.setLangData(lang, allDataLang);
     }
 
     forgotPassword() {
-
+        this.session.forgotPassword();
     }
 
     register() {
-
+        this.session.register();
     }
 }

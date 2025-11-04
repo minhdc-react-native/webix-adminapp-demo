@@ -6,7 +6,6 @@
     "globals": {
         "webix": true,
         "remote": true,
-        "apiClient": true,
         "APPNAME": true,
         "VERSION": true,
         "PRODUCTION": true

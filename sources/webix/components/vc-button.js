@@ -4,12 +4,13 @@ webix.protoUI({
     defaults: {
         iconPosition: "left",
         loading: false,
-        loadingText: "Đang xử lý..."
+        // loadingText: "Loading..."
     },
 
     $init: function (config) {
         if (config.hotkey)
             config._hotkey = config.hotkey;
+        config.loadingText = (config.loadingText || config.value || "Loading") + " ...";
         this.attachEvent("onAfterRender", this._applyIconLayout.bind(this));
     },
 

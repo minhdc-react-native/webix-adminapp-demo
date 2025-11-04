@@ -169,6 +169,7 @@ export default class PersonView extends JetView {
 					tooltip: "Save changes",
 					click: () => {
 						if (this.$$("form").validate()) {
+
 							webix.message("Saved (not really)!", "success");
 						}
 					}

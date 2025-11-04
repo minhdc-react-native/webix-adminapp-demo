@@ -1,0 +1,11 @@
+.webix_sidebar.webix_sidebar_left .webix_tree_item.webix_sidebar_selected+.webix_tree_leaves .webix_tree_item,
+.webix_sidebar.webix_sidebar_left .webix_tree_item.webix_selected,
+.webix_sidebar.webix_sidebar_left .webix_tree_item.webix_sidebar_selected {
+    box-shadow: inset 2px 0 var(--color-secondary);
+}
+
+.webix_sidebar.webix_sidebar_right .webix_tree_item.webix_sidebar_selected+.webix_tree_leaves .webix_tree_item,
+.webix_sidebar.webix_sidebar_right .webix_tree_item.webix_selected,
+.webix_sidebar.webix_sidebar_right .webix_tree_item.webix_sidebar_selected {
+    box-shadow: inset -2px 0 var(--color-secondary);
+}

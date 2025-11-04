@@ -1,10 +1,13 @@
+import VcMessage from "../../services/message";
+
 webix.protoUI({
     name: "gridcombo",
     defaults: {
         displayField: 'id',
         css: "webix_el_combo",
         yCount: 10,
-        placeholder: "Chọn mục..."
+        placeholder: "Chọn mục...",
+        dataCollection: []
     },
 
     $init: function (config) {
@@ -75,11 +78,16 @@ webix.protoUI({
         this._icon = btn;
     },
     _initData(value) {
-        this.parse(this.config.data || []);
-
         const popup = this.getPopup();
         if (!popup) return;
         const tree = popup.getBody();
+
+        if (this.config.dataCollection) {
+            tree.sync(this.config.dataCollection);
+        } else {
+            tree.clearAll();
+            tree.parse(this.config.data || []);
+        }
 
         const displayField = this.config.displayField;
         if (!tree.type || typeof tree.type.template !== "function") {
@@ -96,16 +104,10 @@ webix.protoUI({
             const text = tree.type.template.call(tree.type, item, tree.type);
             const inp = this.getInputNode();
             if (inp) inp.value = text;
-            this.callEvent("onChange", [this.getValue(), this]);
+            // this.callEvent("onChange", [this.getValue(), this]);
         });
     },
     _onIconClick(view, value) {
-        console.log('value>>', value);
-        webix.message(value);
+        VcMessage.info(value);
     },
-    parse(data) {
-        const tree = this.getPopup().getBody();
-        tree.clearAll();
-        tree.parse(data);
-    }
 }, webix.ui.combo);

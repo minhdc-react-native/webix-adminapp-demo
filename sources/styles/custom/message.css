@@ -1,0 +1,54 @@
+.custom-message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.custom-message {
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    min-width: 240px;
+    max-width: 350px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    pointer-events: all;
+}
+
+.custom-message.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.custom-message.hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.custom-message.info {
+    background: #2196f3;
+    color: #fff;
+}
+
+.custom-message.success {
+    background: #4caf50;
+    color: #fff;
+}
+
+.custom-message.warning {
+    background: #ff9800;
+    color: #fff;
+}
+
+.custom-message.error {
+    background: #f44336;
+    color: #fff;
+}

@@ -13,7 +13,7 @@ export default class LoadingView extends JetView {
             resize: false,
             head: false,
             // css: { 'border-radius': '10%', 'opacity': '0.7' },
-            css: { 'border-radius': '10%', 'background-color': 'rgba(255, 255, 255, 0.1)' },
+            css: { 'border-radius': '20%', 'background-color': 'rgba(255, 255, 255, 0.1)' },
             body: {
                 css: "loading-overlay",
                 template: (`

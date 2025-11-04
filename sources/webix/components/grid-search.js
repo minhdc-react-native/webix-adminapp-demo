@@ -1,3 +1,5 @@
+import { getService } from "../../services/serviceHelper";
+
 webix.protoUI({
     name: "gridsearch",
     defaults: {
@@ -9,6 +11,7 @@ webix.protoUI({
         placeholder: "Tìm kiếm..."
     },
     $init: function (config) {
+        this.app = config.app || null;
         config.css = (config.css || "") + " webix_el_search";
         const columns = config.columns;
         config.suggest = {
@@ -38,7 +41,8 @@ webix.protoUI({
                 self._typingTimer = setTimeout(() => {
                     const text = self.getValue().trim();
                     if (text.length >= (config.minLength || self.defaults.minLength) && config.url) {
-                        apiClient.get(config.url.link, {
+                        const api = getService("api");
+                        api.get(config.url.link, {
                             params: { [config.url.filterKey]: text }, showLoading: false,
                             onSuccess: (data) => {
                                 grid.clearAll();

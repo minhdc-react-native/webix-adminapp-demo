@@ -6,3 +6,5 @@ import "./tabbar.css";
 import "./loading.css";
 import "./login.css";
 import "./segment.css";
+import "./message.css";
+import "./sidebar.css";
